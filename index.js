@@ -29,6 +29,7 @@ app.get('/api/users', (req, res, next) => {
       res.send(err)
    })
 })
+
 app.post('/api/users', (req, res, next) => {
    const db = req.app.get('db')
    const User = db.collection('users')
@@ -39,6 +40,24 @@ app.post('/api/users', (req, res, next) => {
    })
    .catch(err => {
       res.send(err)
+   })
+})
+
+app.put('/api/users/:name', (req, res, next) => {
+   const db = req.app.get('db')
+   const User = db.collection('users')
+   User.updateOne({name: req.params.name}, {name: req.body.newName})
+   .then(result => {
+      res.send(result)
+   })
+})
+
+app.delete('/api/users/:name', (req, res, next) => {
+   const db = req.app.get('db')
+   const User = db.collection('users')
+   User.deleteOne({name: req.params.name})
+   .then(result => {
+      res.send(result)
    })
 })
 
