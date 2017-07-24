@@ -4,9 +4,11 @@ require('dotenv').config()
 // Require packages
 const express = require('express')
 const {MongoClient} = require('mongodb')
+const {json} = require('body-parser')
 
 // Set up server
 const app = express()
+app.use(json())
 
 // Set up db
 MongoClient.connect(process.env.DATABASE_URL)
@@ -18,7 +20,7 @@ MongoClient.connect(process.env.DATABASE_URL)
 app.get('/api/users', (req, res, next) => {
    const db = req.app.get('db')
    const User = db.collection('users')
-   User.find({name: "Brian"}).toArray()
+   User.find({}).toArray()
    .then(result => {
       console.log(result)
       res.send(result)
@@ -30,7 +32,7 @@ app.get('/api/users', (req, res, next) => {
 app.post('/api/users', (req, res, next) => {
    const db = req.app.get('db')
    const User = db.collection('users')
-   User.insertOne({name: "Brian"})
+   User.insertOne(req.body)
    .then(result => {
       console.log(result)
       res.send(result)
